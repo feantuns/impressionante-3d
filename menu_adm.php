@@ -60,7 +60,7 @@
 
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Impressionante 3D</a>
+            <a class="navbar-brand" href="index.php">Impressionante 3D</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Alterna navegação">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -157,8 +157,19 @@
                             <div class="col">
                                 <label> Telefone </label> <input type="number" class="form-control" id="ddd_vend" maxlength="9">
                             </div>
-
                         </div>
+
+                        
+                        <div class="row">
+                            <div class="col">
+                                <label> Salário Base </label> <input type="number" class="form-control" id="salario_base">
+                            </div>
+                            <div class="col mb-2">
+                                <label> Taxa de Comissão </label> <input type="number" class="form-control" id="taxa_comissao">
+                            </div>
+                        </div>
+
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                             <button type="reset" class="btn btn-secondary">limpar</button>
@@ -219,6 +230,16 @@
                             </div>
 
                         </div>
+                        
+                            <div class="row">
+                            <div class="col">
+                                <label> Limite de Crédito </label> <input type="number" class="form-control" id="lim_cred">
+                            </div>
+                            <div class="col mb-2">
+                                <label> Crédito Disponível </label> <input type="number" class="form-control" id="cred_disp">
+                            </div>
+                        </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                             <button type="reset" class="btn btn-secondary">limpar</button>
