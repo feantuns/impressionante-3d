@@ -55,11 +55,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" href="#">Home <span class="sr-only"></span></a>
+                    <a class="nav-item nav-link active" href="#">Home <span class="sr-only"></span></a>
                     <a class="nav-item nav-link" href="#">Quem somos</a>
                     <a class="nav-item nav-link" href="#">Produtos</a>
                     <a class="nav-item nav-link" href="#">Calculadora</a>
-                    <a class="nav-item nav-link" href="#">Menu do administrador</a>
+                    <a class="nav-item nav-link" href="menu_adm.php">Menu do administrador</a>
                 </div>
             </div>
             <a style="color: white; slign:center;">Bem vindo(a), <?php echo "$login_verificacao"; ?></a>
@@ -200,42 +200,40 @@
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $consulta_prod = mysqli_query($conexao, "SELECT * FROM produtos");
+                                            $consulta_prod = mysqli_query($conexao, "SELECT * FROM produto");
                                             while ($produto = mysqli_fetch_array($consulta_prod)) {
                                                 echo "                                            
         <tr>
-        <th scope='ro'>" . $produto['id'] . "</th>
-        <td>" . $produto['nome'] . "</td>
-        <td>" . $produto['preco'] . "</td>
-        <td>" . $produto['qtd_vendida'] . "</td>
-        <td>" . $produto['subtotal'] . "</td>
+        <th scope='ro'>" . $produto['idProduto'] . "</th>
+        <td>" . $produto['descricao'] . "</td>
+        <td>" . $produto['precoUnit'] . "</td>
+        <td>" . $produto['qtdVendida'] . "</td>
     </tr>
         ";
                                             } ?>
                                 </div>
                                 </tbody>
                                 </table>
-
-
                             </div>
                         </div>
-
                     </div>
                 </div>
+
+                <center>
+                    <button type="button" class="btn btn-success mr-1 mb-4"> <i class="fas fa-plus"></i> Novo </button>
+                    <button type="button" class="btn btn-primary mr-1 mb-4" ml-1> <i class="far fa-save"></i> Salvar </button>
+                    <button type="button" class="btn btn-danger mr-1 mb-4"> <i class="far fa-trash-alt"></i> Excluir </button>
+                    <button type="button" class="btn btn-warning mr-1 mb-4" ml-1> <i class="fas fa-ban"></i> Cancelar </button>
+                    <button type="button" class="btn btn-info mr-1 mb-4"> <i class="far fa-window-close"></i> Sair </button>
+
+                </center>
             </div>
 
 
         </div>
     </main>
-
-
     <script>
-
     </script>
-
-
-
-
     <?
     mysqli_close($conexao);
     ?>
