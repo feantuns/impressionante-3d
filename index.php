@@ -120,7 +120,14 @@
                     <div class="row mt-4">
                         <div class="col-sm">
                             <label for="num_pedido"> Numero do pedido </label>
-                            <input type="number" class="form-control" id="num_pedido" placeholder="0000">
+                            <?php
+                                $consulta_id_pedido = mysqli_query($conexao, "SELECT MAX(idPedido) FROM pedido LIMIT 1");
+                                $idPedido = mysqli_fetch_array($consulta_id_pedido)[0] + 1;
+                                echo "<script>console.log(' . $idPedido . ')</script>";
+                                echo "                                           
+                                        <input type='number' class='form-control' id='num_pedido' value='$idPedido'>
+                                    ";
+                            ?>                            
                         </div>
 
                         <div class="col-sm">
@@ -199,18 +206,19 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php
-                                            $consulta_prod = mysqli_query($conexao, "SELECT * FROM produto");
+                                        <?php
+                                            $consulta_prod = mysqli_query($conexao, "SELECT A.idProduto, A.descricao, A.precoUnit, B.qtdVendida FROM produto A, item_pedido B WHERE B.idPedido = $idPedido");
                                             while ($produto = mysqli_fetch_array($consulta_prod)) {
                                                 echo "                                            
-        <tr>
-        <th scope='ro'>" . $produto['idProduto'] . "</th>
-        <td>" . $produto['descricao'] . "</td>
-        <td>" . $produto['precoUnit'] . "</td>
-        <td>" . $produto['qtdVendida'] . "</td>
-    </tr>
-        ";
-                                            } ?>
+                                                    <tr>
+                                                        <th scope='ro'>" . $produto['idProduto'] . "</th>
+                                                        <td>" . $produto['descricao'] . "</td>
+                                                        <td>" . $produto['precoUnit'] . "</td>
+                                                        <td>" . $produto['qtdVendida'] . "</td>
+                                                    </tr>
+                                                ";
+                                            } 
+                                        ?>
                                 </div>
                                 </tbody>
                                 </table>
