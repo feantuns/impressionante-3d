@@ -118,19 +118,27 @@
             <div class="container" id="for_container">
                 <div class="form-group">
                     <div class="row mt-4">
-                        <div class="col-sm">
-                            <label for="num_pedido"> Numero do pedido </label>
+                        <div class="col col-sm">
+                            <div class="row align-items-end">
+                                <div class="col-md-10">
+                                    <label for="num_pedido"> Numero do pedido </label>
+                                    <input type='number' class='form-control' name="num_pedido" id='num_pedido' value=''>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-primary" onclick="onClickSearchPedido()"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+
                             <?php
-                                $consulta_id_pedido = mysqli_query($conexao, "SELECT MAX(idPedido) FROM pedido LIMIT 1");
-                                $idPedido = mysqli_fetch_array($consulta_id_pedido)[0] + 1;
-                                echo "<script>console.log(' . $idPedido . ')</script>";
-                                echo "                                           
-                                        <input type='number' class='form-control' id='num_pedido' value='$idPedido'>
-                                    ";
-                            ?>                            
+                            // $consulta_id_pedido = mysqli_query($conexao, "SELECT MAX(idPedido) FROM pedido LIMIT 1");
+                            // $idPedido = mysqli_fetch_array($consulta_id_pedido)[0] + 1;
+                            // echo "                                           
+                            //         <input type='number' class='form-control' id='num_pedido' value='$idPedido'>
+                            //     ";
+                            ?>
                         </div>
 
-                        <div class="col-sm">
+                        <div class="col col-sm">
                             <label for="Num_pedido"> Data do Pedido </label>
                             <input type="date" class="form-control" id="data_pedido" placeholder="dd/mm/yyyy">
                         </div>
@@ -145,7 +153,8 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="row ml-0">
-                                        <input type="number" class="form-control" id="cod_cliente" placeholder="0000" style="width:20%;"> <i class="fas fa-search mt-2 ml-2 mr-2"></i>
+                                        <input type="number" class="form-control" id="cod_cliente" placeholder="0000" style="width:20%;">
+                                        <i class="fas fa-search mt-2 ml-2 mr-2"></i>
                                         <input type="text" class="form-control ml-4" id="nome_cliente" style="width:72%;" readonly>
                                     </div>
                                 </div>
@@ -162,8 +171,9 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="row ml-0">
-                                        <input type="number" class="form-control" id="cod_vendedir" placeholder="0000" style="width:20%;"> <i class="fas fa-search mt-2 ml-2 mr-2"></i>
-                                        <input type="text" class="form-control ml-4" id="nome_vendedir" style="width:72%;" readonly>
+                                        <input type="number" class="form-control" id="cod_vendedor" placeholder="0000" style="width:20%;">
+                                        <i class="fas fa-search mt-2 ml-2 mr-2"></i>
+                                        <input type="text" class="form-control ml-4" id="nome_vendedor" style="width:72%;" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -202,11 +212,10 @@
                                                 <th scope="col">Preço Unitário</th>
                                                 <th scope="col">Quantidade Vendida</th>
                                                 <th scope="col">SubTotal</th>
-
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                        <?php
+                                        <tbody id="body-tabela-produtos">
+                                            <?php
                                             $consulta_prod = mysqli_query($conexao, "SELECT A.idProduto, A.descricao, A.precoUnit, B.qtdVendida FROM produto A, item_pedido B WHERE B.idPedido = $idPedido");
                                             while ($produto = mysqli_fetch_array($consulta_prod)) {
                                                 echo "                                            
@@ -217,8 +226,8 @@
                                                         <td>" . $produto['qtdVendida'] . "</td>
                                                     </tr>
                                                 ";
-                                            } 
-                                        ?>
+                                            }
+                                            ?>
                                 </div>
                                 </tbody>
                                 </table>
@@ -233,14 +242,55 @@
                     <button type="button" class="btn btn-danger mr-1 mb-4"> <i class="far fa-trash-alt"></i> Excluir </button>
                     <button type="button" class="btn btn-warning mr-1 mb-4" ml-1> <i class="fas fa-ban"></i> Cancelar </button>
                     <button type="button" class="btn btn-info mr-1 mb-4"> <i class="far fa-window-close"></i> Sair </button>
-
                 </center>
+            </div>
+
+            <div class="resultado_pesdido">
+
             </div>
 
 
         </div>
     </main>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
     <script>
+        function onClickSearchPedido(evt) {
+            var pesquisa = $('#num_pedido').val();
+
+            //Verificar se há algo digitado
+            if (pesquisa != '') {
+                var dados = {
+                    palavra: pesquisa
+                }
+                $.post('busca.php', dados, function(retorna) {
+                    //Mostra dentro da ul os resultado obtidos 
+                    console.log(retorna);
+                    const response = JSON.parse(retorna);
+                    $("#nome_cliente").val(response.cliente);
+                    $("#nome_vendedor").val(response.vendedor);
+                    $("#data_pedido").val(response.dtPedido);
+                    $("#cod_cliente").val(response.idCliente);
+                    $("#cod_vendedor").val(response.idVendedor);
+
+                    const {
+                        produtos
+                    } = response;
+
+                    produtos.forEach(({
+                        id,
+                        qtdVendida,
+                        descricao,
+                        precoUnit,
+                        subTotal
+                    }) => {
+                        $('#body-tabela-produtos').append(`<tr><td>${id}</td><td>${descricao}</td><td>${precoUnit}</td><td>${qtdVendida}</td><td>${subTotal}</td></tr>`)
+                    })
+                });
+            } else {
+                $(".resultado_pedido").html('');
+            }
+
+        }
     </script>
     <?
     mysqli_close($conexao);
