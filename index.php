@@ -149,14 +149,17 @@
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm">
-                            <label for="cod_cliente"> Código do Cliente </label>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="row ml-0">
-                                        <input type="number" class="form-control" id="cod_cliente" placeholder="0000" style="width:20%;">
-                                        <i class="fas fa-search mt-2 ml-2 mr-2"></i>
-                                        <input type="text" class="form-control ml-4" id="nome_cliente" style="width:72%;" readonly>
-                                    </div>
+                            <div class="row align-items-end">
+                                <div class="col-md-3">
+                                    <label for="cod_cliente"> Código do Cliente </label>
+                                    <input type='number' class='form-control' name="cod_cliente" id='cod_cliente'>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-primary" onclick="onClickSearchCliente()"><i class="fas fa-search"></i></button>
+                                </div>
+                                <div class="col-md-8">
+                                    <label for="nome_cliente"> Nome do Cliente </label>
+                                    <input type='text' class='form-control' name="nome_cliente" id='nome_cliente' disabled>
                                 </div>
                             </div>
                         </div>
@@ -167,14 +170,17 @@
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm">
-                            <label for="cod_cliente"> Código do Vendedor </label>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="row ml-0">
-                                        <input type="number" class="form-control" id="cod_vendedor" placeholder="0000" style="width:20%;">
-                                        <i class="fas fa-search mt-2 ml-2 mr-2"></i>
-                                        <input type="text" class="form-control ml-4" id="nome_vendedor" style="width:72%;" readonly>
-                                    </div>
+                            <div class="row align-items-end">
+                                <div class="col-md-3">
+                                    <label for="cod_vendedor"> Código do Vendedor </label>
+                                    <input type='number' class='form-control' name="cod_vendedor" id='cod_vendedor'>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="button" class="btn btn-primary" onclick="onClickSearchVendedor()"><i class="fas fa-search"></i></button>
+                                </div>
+                                <div class="col-md-8">
+                                    <label for="nome_vendedor"> Nome do Vendedor </label>
+                                    <input type='text' class='form-control' name="nome_vendedor" id='nome_vendedor' disabled>
                                 </div>
                             </div>
                         </div>
@@ -245,10 +251,6 @@
                 </center>
             </div>
 
-            <div class="resultado_pesdido">
-
-            </div>
-
 
         </div>
     </main>
@@ -262,7 +264,7 @@
                 var dados = {
                     palavra: pesquisa
                 }
-                $.post('busca.php', dados, function(retorna) {
+                $.post('busca-pedido.php', dados, function(retorna) {
                     //Mostra dentro da ul os resultado obtidos 
                     console.log(retorna);
                     const response = JSON.parse(retorna);
@@ -286,10 +288,39 @@
                         $('#body-tabela-produtos').append(`<tr><td>${id}</td><td>${descricao}</td><td>${precoUnit}</td><td>${qtdVendida}</td><td>${subTotal}</td></tr>`)
                     })
                 });
-            } else {
-                $(".resultado_pedido").html('');
             }
+        }
 
+        function onClickSearchCliente(evt) {
+            var pesquisa = $('#cod_cliente').val();
+
+            //Verificar se há algo digitado
+            if (pesquisa != '') {
+                var dados = {
+                    palavra: pesquisa
+                }
+                $.post('busca-cliente.php', dados, function(retorna) {
+                    //Mostra dentro da ul os resultado obtidos
+                    const response = JSON.parse(retorna);
+                    $("#nome_cliente").val(response.cliente);
+                });
+            }
+        }
+
+        function onClickSearchVendedor(evt) {
+            var pesquisa = $('#cod_vendedor').val();
+
+            //Verificar se há algo digitado
+            if (pesquisa != '') {
+                var dados = {
+                    palavra: pesquisa
+                }
+                $.post('busca-vendedor.php', dados, function(retorna) {
+                    //Mostra dentro da ul os resultado obtidos
+                    const response = JSON.parse(retorna);
+                    $("#nome_vendedor").val(response.cliente);
+                });
+            }
         }
     </script>
     <?
