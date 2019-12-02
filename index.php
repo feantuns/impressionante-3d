@@ -23,10 +23,7 @@
         }
     }
 
-
-
     ?>
-
 
     <style>
         #for_container {
@@ -62,11 +59,16 @@
                     <a class="nav-item nav-link" href="menu_adm.php">Menu do administrador</a>
                 </div>
             </div>
-            <a style="color: white; slign:center;">Bem vindo(a), <?php echo "$login_verificacao"; ?></a>
+            <a style="color: white; slign:center;">PScripts <i class="fas fa-heart" style="color: rgb(224, 36, 94)"></i></a>
         </nav>
     </header>
     <main>
         <div class="container">
+            <div class="row mt-4 justify-content-end">
+                <div class="col-md-4">
+                    <h6>Feito por <b>Felipe Antunes</b> e <b>Matheus Figueiredo</b></h6>
+                </div>
+            </div>
             <div class="card-group mt-4 col-center " style="width:100%;">
                 <div class="card ml-4 mr-4 mt-3">
                     <img class="card-img-top" src="imagens/tinkercad.jpg" alt="Imagem do logo do tinkercad">
@@ -129,13 +131,7 @@
                                 </div>
                             </div>
 
-                            <?php
-                            // $consulta_id_pedido = mysqli_query($conexao, "SELECT MAX(idPedido) FROM pedido LIMIT 1");
-                            // $idPedido = mysqli_fetch_array($consulta_id_pedido)[0] + 1;
-                            // echo "                                           
-                            //         <input type='number' class='form-control' id='num_pedido' value='$idPedido'>
-                            //     ";
-                            ?>
+
                         </div>
 
                         <div class="col col-sm">
@@ -204,8 +200,8 @@
                     <div class="row">
                         <div class="col">
                             <center>
-                                <button type="button" class="btn btn-success mr-1"> <i class="fas fa-plus"></i> Adicionar Item </button>
-                                <button type="button" class="btn btn-danger" ml-1> <i class="fas fa-minus"></i> Remover Item </button>
+                                <button type="button" class="btn btn-success mr-1" onclick="onClickAddItem()"> <i class="fas fa-plus"></i> Adicionar Item </button>
+                                <button type="button" class="btn btn-danger ml-1" onclick="onClickRemoveItem()"> <i class="fas fa-minus"></i> Remover Item </button>
                             </center>
 
                             <div class="row mt-4">
@@ -221,33 +217,26 @@
                                             </tr>
                                         </thead>
                                         <tbody id="body-tabela-produtos">
-                                            <?php
-                                            $consulta_prod = mysqli_query($conexao, "SELECT A.idProduto, A.descricao, A.precoUnit, B.qtdVendida FROM produto A, item_pedido B WHERE B.idPedido = $idPedido");
-                                            while ($produto = mysqli_fetch_array($consulta_prod)) {
-                                                echo "                                            
-                                                    <tr>
-                                                        <th scope='ro'>" . $produto['idProduto'] . "</th>
-                                                        <td>" . $produto['descricao'] . "</td>
-                                                        <td>" . $produto['precoUnit'] . "</td>
-                                                        <td>" . $produto['qtdVendida'] . "</td>
-                                                    </tr>
-                                                ";
-                                            }
-                                            ?>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                </tbody>
-                                </table>
+                            </div>
+
+                            <div class="row mt-4 justify-content-end">
+                                <div class="col-md-2">
+                                    <b>Total: </b> <span id="total">0.00</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <center>
-                    <button type="button" class="btn btn-success mr-1 mb-4"> <i class="fas fa-plus"></i> Novo </button>
-                    <button type="button" class="btn btn-primary mr-1 mb-4" ml-1> <i class="far fa-save"></i> Salvar </button>
-                    <button type="button" class="btn btn-danger mr-1 mb-4"> <i class="far fa-trash-alt"></i> Excluir </button>
-                    <button type="button" class="btn btn-warning mr-1 mb-4" ml-1> <i class="fas fa-ban"></i> Cancelar </button>
-                    <button type="button" class="btn btn-info mr-1 mb-4"> <i class="far fa-window-close"></i> Sair </button>
+                    <button type="button" class="btn btn-success mr-1 mb-4" onclick="onClickNewOrder()"> <i class="fas fa-plus"></i> Novo </button>
+                    <button type="button" class="btn btn-primary mr-1 mb-4 ml-1" onclick="naoImplementado()"> <i class="far fa-save"></i> Salvar </button>
+                    <button type="button" class="btn btn-danger mr-1 mb-4" onclick="naoImplementado()"> <i class="far fa-trash-alt"></i> Excluir </button>
+                    <button type="button" class="btn btn-warning mr-1 mb-4 ml-1" onclick="limpaTudo()"> <i class="fas fa-ban"></i> Cancelar </button>
+                    <button type="button" class="btn btn-info mr-1 mb-4" onclick="naoImplementado()"> <i class="far fa-window-close"></i> Sair </button>
                 </center>
             </div>
 
@@ -285,7 +274,9 @@
                         precoUnit,
                         subTotal
                     }) => {
+                        $('#body-tabela-produtos').text('');
                         $('#body-tabela-produtos').append(`<tr><td>${id}</td><td>${descricao}</td><td>${precoUnit}</td><td>${qtdVendida}</td><td>${subTotal}</td></tr>`)
+                        $('#total').text(subTotal);
                     })
                 });
             }
@@ -321,6 +312,89 @@
                     $("#nome_vendedor").val(response.cliente);
                 });
             }
+        }
+
+        function onClickAddItem() {
+            var idProduto = $('#cod_produto').val();
+            var qtdVendida = $('#qtd_vendida').val();
+            //Verificar se há algo digitado
+            if (idProduto != '') {
+                var dados = {
+                    idProduto,
+                    qtdVendida,
+                }
+                $.post('busca-produto.php', dados, function(retorna) {
+                    //Mostra dentro da ul os resultado obtidos
+                    const response = JSON.parse(retorna);
+                    const {
+                        descricao,
+                        precoUnit
+                    } = response;
+                    // pegando dados da tabela calc subTotal
+                    var array = $('#body-tabela-produtos tr').toArray();
+                    array = array.map(el => el.children);
+                    array = array.map(el => Array.from(el).map(child => child.textContent));
+                    var subTotal = precoUnit * qtdVendida;
+                    array.forEach(dados => {
+                        subTotal += Number(dados[2]) * Number(dados[3]);
+                    })
+                    $('#body-tabela-produtos').append(`<tr><td>${idProduto}</td><td>${descricao}</td><td>${precoUnit}</td><td>${qtdVendida}</td><td>${subTotal}</td></tr>`)
+                    $('#total').text(subTotal);
+                });
+            }
+        }
+
+        function onClickRemoveItem() {
+            $('#body-tabela-produtos tr:last-child').remove();
+        }
+
+        function onClickNewOrder() {
+            var idCliente = $('#cod_cliente').val();
+            var idVendedor = $('#cod_vendedor').val();
+            var status = "A";
+            var dtPedido = $('#data_pedido').val();
+
+            var dados = {
+                idCliente,
+                idVendedor,
+                status,
+                dtPedido,
+            }
+
+            $.post('novo-pedido.php', dados, function(retorna) {
+                $('body').append(retorna);
+
+                // adiciona itens
+                var itens = $('#body-tabela-produtos tr').toArray();
+                itens = itens.map(el => el.children);
+                itens = itens.map(el => Array.from(el).map(child => child.textContent));
+
+                itens.forEach(dados => {
+                    body = {
+                        idProduto: Number(dados[0]),
+                        qtdVendida: Number(dados[3]),
+                    }
+                    $.post('novo-item-pedido.php', body, function(retorna) {
+                        $('body').append(retorna)
+                    });
+                })
+            });
+
+        }
+
+        function limpaTudo() {
+            $('#body-tabela-produtos').text('');
+            $('#total').text('');
+            $('#cod_cliente').val('');
+            $('#cod_vendedor').val('');
+            $('#data_pedido').val('');
+            $('#nome_cliente').val('');
+            $('#nome_vendedor').val('');
+            $('#num_pedido').val('');
+        }
+
+        function naoImplementado() {
+            alert('não foi dessa vez :(');
         }
     </script>
     <?
