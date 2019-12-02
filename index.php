@@ -200,8 +200,8 @@
                     <div class="row">
                         <div class="col">
                             <center>
-                                <button type="button" class="btn btn-success mr-1" onclick="onClickAddItem()"> <i class="fas fa-plus"></i> Adicionar Item </button>
-                                <button type="button" class="btn btn-danger ml-1" onclick="onClickRemoveItem()"> <i class="fas fa-minus"></i> Remover Item </button>
+                                <button type="button" class="btn btn-success mr-1" onclick="onClickAddItem()" id="adiciona_item" disabled> <i class="fas fa-plus"></i> Adicionar Item </button>
+                                <button type="button" class="btn btn-danger ml-1" onclick="onClickRemoveItem()" id="remove_item" disabled> <i class="fas fa-minus"></i> Remover Item </button>
                             </center>
 
                             <div class="row mt-4">
@@ -233,9 +233,9 @@
 
                 <center>
                     <button type="button" class="btn btn-success mr-1 mb-4" onclick="onClickNewOrder()"> <i class="fas fa-plus"></i> Novo </button>
-                    <button type="button" class="btn btn-primary mr-1 mb-4 ml-1" onclick="naoImplementado()"> <i class="far fa-save"></i> Salvar </button>
-                    <button type="button" class="btn btn-danger mr-1 mb-4" onclick="naoImplementado()"> <i class="far fa-trash-alt"></i> Excluir </button>
-                    <button type="button" class="btn btn-warning mr-1 mb-4 ml-1" onclick="limpaTudo()"> <i class="fas fa-ban"></i> Cancelar </button>
+                    <button type="button" class="btn btn-primary mr-1 mb-4 ml-1" onclick="naoImplementado()" id="btn_salvar" disabled> <i class="far fa-save"></i> Salvar </button>
+                    <button type="button" class="btn btn-danger mr-1 mb-4" onclick="naoImplementado()" id="btn_excluir" disabled> <i class="far fa-trash-alt"></i> Excluir </button>
+                    <button type="button" class="btn btn-warning mr-1 mb-4 ml-1" onclick="limpaTudo()" id="btn_cancelar" disabled> <i class="fas fa-ban"></i> Cancelar </button>
                     <button type="button" class="btn btn-info mr-1 mb-4" onclick="naoImplementado()"> <i class="far fa-window-close"></i> Sair </button>
                 </center>
             </div>
@@ -277,6 +277,21 @@
                         $('#body-tabela-produtos').text('');
                         $('#body-tabela-produtos').append(`<tr><td>${id}</td><td>${descricao}</td><td>${precoUnit}</td><td>${qtdVendida}</td><td>${subTotal}</td></tr>`)
                         $('#total').text(subTotal);
+
+
+                        var numero_pedido = document.getElementById('num_pedido').value;
+                        if (numero_pedido != "") {
+                            document.getElementById('adiciona_item').disabled = false;
+                            document.getElementById('remove_item').disabled = false;
+                            document.getElementById('btn_cancelar').disabled = false;
+                            document.getElementById('btn_salvar').disabled = false;
+                            document.getElementById('btn_excluir').disabled = false;
+
+                           
+
+
+                        }
+
                     })
                 });
             }
@@ -396,6 +411,9 @@
         function naoImplementado() {
             alert('não foi dessa vez :(');
         }
+
+        //    adiciona_item
+        //   remove_item
     </script>
     <?
     mysqli_close($conexao);
