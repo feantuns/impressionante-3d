@@ -1,3 +1,6 @@
+CREATE database impressionante3D;
+use impressionante3D;
+
 CREATE TABLE `cliente` (
   `idCliente` int(100) NOT NULL AUTO_INCREMENT,
   `cpf` varchar(13) NOT NULL,
@@ -13,13 +16,21 @@ CREATE TABLE `cliente` (
   PRIMARY KEY (idCliente)
 );
 
-CREATE TABLE `item_pedido` (
-  `idPedido` int(100) NOT NULL,
-  `idProduto` int(100) NOT NULL,
-  `qtdVendida` int(100) NOT NULL,
-  FOREIGN KEY (idPedido) REFERENCES pedido (idPedido),
-  FOREIGN KEY (idProduto) REFERENCES produto (idProduto)
+
+CREATE TABLE `vendedor` (
+  `idVendedor` int(100) NOT NULL AUTO_INCREMENT,
+  `cpf` varchar(15) NOT NULL,
+  `nome` varchar(75) NOT NULL,
+  `endereco` varchar(100) NOT NULL,
+  `cidade` varchar(75) NOT NULL,
+  `cep` varchar(20) NOT NULL,
+  `uf` varchar(5) NOT NULL,
+  `telefone_ddd` int(5) NOT NULL,
+  `salario_base` float(5,2) NOT NULL,
+  `taxa_comissao` float(5,2) NOT NULL,
+  PRIMARY KEY (idVendedor)
 );
+
 
 CREATE TABLE `pedido` (
   `idPedido` int(100) NOT NULL AUTO_INCREMENT,
@@ -42,6 +53,14 @@ CREATE TABLE `produto` (
   PRIMARY KEY (idProduto)
 );
 
+CREATE TABLE `item_pedido` (
+  `idPedido` int(100) NOT NULL,
+  `idProduto` int(100) NOT NULL,
+  `qtdVendida` int(100) NOT NULL,
+  FOREIGN KEY (idPedido) REFERENCES pedido (idPedido),
+  FOREIGN KEY (idProduto) REFERENCES produto (idProduto)
+);
+
 CREATE TABLE `usuario` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `nome` varchar(75) NOT NULL,
@@ -54,19 +73,6 @@ CREATE TABLE `usuario` (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE `vendedor` (
-  `idVendedor` int(100) NOT NULL AUTO_INCREMENT,
-  `cpf` varchar(15) NOT NULL,
-  `nome` varchar(75) NOT NULL,
-  `endereco` varchar(100) NOT NULL,
-  `cidade` varchar(75) NOT NULL,
-  `cep` varchar(20) NOT NULL,
-  `uf` varchar(5) NOT NULL,
-  `telefone_ddd` int(5) NOT NULL,
-  `salario_base` float(5,2) NOT NULL,
-  `taxa_comissao` float(5,2) NOT NULL,
-  PRIMARY KEY (idVendedor)
-);
 
 -- INSERTS
 
